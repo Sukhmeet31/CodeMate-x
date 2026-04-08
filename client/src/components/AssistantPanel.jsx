@@ -8,7 +8,7 @@ export default function AssistantPanel({ code, theme = "light" }) {
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState("");
 
-  const MAX_OUTPUT_LENGTH = 2000; // Limit to prevent token exhaustion
+  const MAX_OUTPUT_LENGTH = 2000;
   const isDark = theme === "dark";
 
   const handleAsk = async () => {
@@ -17,30 +17,36 @@ export default function AssistantPanel({ code, theme = "light" }) {
     setResponse("");
 
     try {
-      const endpoint = question.includes("function") || question.includes("def") || question.includes("explain")
-        ? "/api/explain"
-        : "/api/chat";
+      const trimmedQuestion = question.substring(0, 500);
+      const trimmedCode = code.substring(0, 5000);
+      const hasQuestion = question.trim().length > 0;
 
-      const res = await axios.post(`http://localhost:5000${endpoint}`, {
-        code: code ? code.substring(0, 5000) : question.substring(0, 5000), // Limit input
-        query: question.substring(0, 500) // Limit query length
+      const res = await axios.post("http://localhost:5000/api/chat", {
+        query: trimmedQuestion,
+        code: trimmedCode,
+        messages: [
+          {
+            role: "user",
+            content: hasQuestion
+              ? `Question: ${trimmedQuestion}\n\nCode:\n${trimmedCode}`
+              : `Please review and explain this code:\n\n${trimmedCode}`,
+          },
+        ],
       });
 
       let responseText = res.data.explanation || res.data.reply || "No response.";
-      
-      // Limit output length to prevent token exhaustion
+
       if (responseText.length > MAX_OUTPUT_LENGTH) {
         responseText = responseText.substring(0, MAX_OUTPUT_LENGTH) + "\n\n... (Response truncated to prevent token exhaustion)";
       }
 
       setResponse(responseText);
-    } catch (e) {
-      setResponse("⚠️ Error: Could not get response from AI. Please check your connection and try again.");
+    } catch {
+      setResponse("Error: Could not get a response from the AI service. Please check the server connection and try again.");
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <motion.div
@@ -82,11 +88,13 @@ export default function AssistantPanel({ code, theme = "light" }) {
         {loading ? "Analyzing..." : "Ask AI Assistant"}
       </motion.button>
 
-      <div className={`flex-1 overflow-y-auto rounded-lg p-4 text-sm border transition-colors ${
-        isDark
-          ? "bg-slate-900/60 border-slate-700 text-slate-200"
-          : "bg-white/60 border-indigo-100 text-gray-700"
-      }`}>
+      <div
+        className={`flex-1 overflow-y-auto rounded-lg p-4 text-sm border transition-colors ${
+          isDark
+            ? "bg-slate-900/60 border-slate-700 text-slate-200"
+            : "bg-white/60 border-indigo-100 text-gray-700"
+        }`}
+      >
         {loading ? (
           <div className="flex items-center justify-center space-x-2 text-indigo-600">
             <Loader2 className="w-5 h-5 animate-spin" />

@@ -10,7 +10,6 @@ import {
   ArrowRight,
   Check,
   Star,
-  Github,
   Twitter,
   Linkedin
 } from "lucide-react";
@@ -146,20 +145,12 @@ export default function LandingPage({ onGetStarted, onSkipLogin, theme = "light"
               <ArrowRight className="w-5 h-5" />
             </motion.button>
             <motion.button
-              onClick={() => onGetStarted(true)}
+              onClick={onSkipLogin}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg border-2 border-blue-200 hover:border-blue-300 transition-all flex items-center space-x-2"
             >
               <span>Start Without Signing Up</span>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg border-2 border-blue-200 hover:border-blue-300 transition-all flex items-center space-x-2"
-            >
-              <Github className="w-5 h-5" />
-              <span>View on GitHub</span>
             </motion.button>
           </motion.div>
 
@@ -280,9 +271,6 @@ export default function LandingPage({ onGetStarted, onSkipLogin, theme = "light"
             <span className="text-gray-700 font-semibold">CodeMate X</span>
           </div>
           <div className="flex items-center space-x-6">
-            <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
-              <Github className="w-5 h-5" />
-            </a>
             <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
               <Twitter className="w-5 h-5" />
             </a>

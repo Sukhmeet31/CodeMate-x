@@ -109,7 +109,7 @@ export default function LoginPage({ onLogin, theme = "light" }) {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required={isSignUp}
-                      placeholder="John Doe"
+                      placeholder="Full name"
                       className="w-full pl-10 pr-4 py-3 border border-blue-200 rounded-lg bg-white/50 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                     />
                   </div>

@@ -33,6 +33,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState("landing"); 
   const [code, setCode] = useState("// Start coding here...\n# Welcome to CodeMate X\n# Write your code below\n");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [guestMode, setGuestMode] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [theme, setTheme] = useState(() => {
@@ -60,18 +61,20 @@ export default function App() {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
         setLoggedIn(true);
+        setGuestMode(false);
         setCurrentView("dashboard");
-      } else {
+      } else if (!guestMode) {
         setLoggedIn(false);
         setCurrentView("landing"); 
       }
     });
     return () => unsub();
-  }, []);
+  }, [guestMode]);
 
   // Reset app state
   function resetApp() {
     setLoggedIn(false);
+    setGuestMode(false);
     setCurrentView("landing");
   }
 
@@ -99,11 +102,18 @@ export default function App() {
 
 async function handleLogout() {
   setIsLoading(true);
+  setGuestMode(false);
+  setCurrentView("landing");
   await signOut(auth);
   setIsLoading(false);
 }
 
+  function handleGuestAccess() {
+    setGuestMode(true);
+    setCurrentView("dashboard");
+  }
 
+  const hasWorkspaceAccess = loggedIn || guestMode;
 
   function handleNavigate(view) {
     setCurrentView(view);
@@ -119,10 +129,14 @@ async function handleLogout() {
       {isLoading && <Loader fullScreen={true} />}
 
       {/* 🔥 If NOT logged in → show Landing or Login */}
-      {!loggedIn ? (
+      {!hasWorkspaceAccess ? (
         <>
           {currentView === "landing" ? (
-            <LandingPage onGetStarted={() => setCurrentView("login")} theme={theme} />
+            <LandingPage
+              onGetStarted={() => setCurrentView("login")}
+              onSkipLogin={handleGuestAccess}
+              theme={theme}
+            />
           ) : (
             <LoginPage onLogin={handleLogin} theme={theme} />
           )}
@@ -133,7 +147,7 @@ async function handleLogout() {
 
           <Navbar
             resetApp={resetApp}
-            loggedIn={loggedIn}
+            loggedIn={hasWorkspaceAccess}
             onLogout={handleLogout}
             currentView={currentView}
             onNavigate={handleNavigate}
@@ -249,14 +263,13 @@ async function handleLogout() {
           <CommandPalette
             open={paletteOpen}
             setOpen={setPaletteOpen}
-            runCommand={(cmd) => alert(`Running: ${cmd}`)}
           />
 
           <ScrollToTop />
         </>
       )}
 
-      {loggedIn && <Footer />}
+      {hasWorkspaceAccess && <Footer />}
     </div>
   );
 }

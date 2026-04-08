@@ -1,104 +1,22 @@
 import { motion } from "framer-motion";
-import { 
-  Code2, 
-  MessageSquare, 
-  FileCode, 
-  Zap, 
-  TrendingUp, 
-  Users, 
-  Clock, 
-  Star,
-  ArrowRight,
+import {
+  MessageSquare,
+  FileCode,
   Sparkles,
+  ArrowRight,
   BookOpen,
   Settings,
+  Folder,
   BarChart3,
   Activity,
-  Folder
 } from "lucide-react";
 import AnimatedGridBackground from "./AnimatedGridBackground";
 
 export default function Dashboard({ onNavigate }) {
-  const stats = [
-    { icon: FileCode, label: "Projects", value: "12", color: "from-blue-500 to-blue-600", change: "+3 this month" },
-    { icon: MessageSquare, label: "Chats", value: "48", color: "from-indigo-500 to-indigo-600", change: "+12 today" },
-    { icon: Zap, label: "AI Requests", value: "1.2K", color: "from-purple-500 to-purple-600", change: "+156 today" },
-    { icon: Clock, label: "Time Saved", value: "24h", color: "from-green-500 to-green-600", change: "This week" },
-  ];
-
-  const quickActions = [
-    { 
-      icon: MessageSquare, 
-      title: "Start Chat", 
-      description: "Ask questions about code",
-      color: "from-blue-500 to-indigo-600",
-      action: () => onNavigate("chat")
-    },
-    { 
-      icon: FileCode, 
-      title: "Code Editor", 
-      description: "Write and debug code",
-      color: "from-indigo-500 to-purple-600",
-      action: () => onNavigate("editor")
-    },
-    { 
-      icon: BookOpen, 
-      title: "Documentation", 
-      description: "Browse guides and tutorials",
-      color: "from-purple-500 to-pink-600",
-      action: () => onNavigate("docs")
-    },
-    { 
-      icon: Settings, 
-      title: "Settings", 
-      description: "Configure your workspace",
-      color: "from-gray-500 to-gray-600",
-      action: () => onNavigate("settings")
-    },
-    { 
-      icon: Folder, 
-      title: "Projects", 
-      description: "Manage your coding projects",
-      color: "from-emerald-500 to-teal-600",
-      action: () => onNavigate("projects")
-    },
-    { 
-      icon: BarChart3, 
-      title: "Analytics", 
-      description: "View your coding statistics",
-      color: "from-orange-500 to-red-600",
-      action: () => onNavigate("analytics")
-    },
-  ];
-
-  const recentActivity = [
-    { type: "chat", title: "Explained React Hooks", time: "2 hours ago", icon: MessageSquare },
-    { type: "code", title: "Fixed Python function", time: "5 hours ago", icon: FileCode },
-    { type: "chat", title: "Debugged JavaScript error", time: "1 day ago", icon: MessageSquare },
-    { type: "code", title: "Created new project", time: "2 days ago", icon: FileCode },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <div className="min-h-screen pb-12 relative">
-      {/* Devin-style Glowing Moving Lines Background */}
       <AnimatedGridBackground />
-      
-      {/* Additional Animated Background Elements */}
+
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <motion.div
           animate={{
@@ -109,9 +27,9 @@ export default function Dashboard({ onNavigate }) {
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
-          className="absolute top-20 left-20 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-15"
+          className="absolute top-20 left-20 h-72 w-72 rounded-full bg-blue-400 opacity-15 blur-3xl"
         />
         <motion.div
           animate={{
@@ -123,39 +41,38 @@ export default function Dashboard({ onNavigate }) {
             duration: 25,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 0.5
+            delay: 0.5,
           }}
-          className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-15"
+          className="absolute bottom-20 right-20 h-96 w-96 rounded-full bg-indigo-400 opacity-15 blur-3xl"
         />
       </div>
 
-      {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white py-16 px-6 md:px-12 rounded-b-3xl shadow-2xl mb-8"
+        className="relative mb-8 overflow-hidden rounded-b-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 px-6 py-16 text-white shadow-2xl md:px-12"
       >
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative z-10 max-w-7xl mx-auto">
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="flex items-center space-x-3 mb-4"
+            className="mb-4 flex items-center space-x-3"
           >
-            <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <Sparkles className="w-8 h-8" />
+            <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm">
+              <Sparkles className="h-8 w-8" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold">Welcome Back!</h1>
+            <h1 className="text-4xl font-bold md:text-5xl">Workspace</h1>
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-xl md:text-2xl text-blue-100 mb-6"
+            className="mb-6 text-xl text-blue-100 md:text-2xl"
           >
-            Your AI-powered coding companion is ready to help
+            Open a tool to start working. Activity, projects, and analytics will appear here once real data is available.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -165,158 +82,123 @@ export default function Dashboard({ onNavigate }) {
           >
             <button
               onClick={() => onNavigate("chat")}
-              className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2"
+              className="flex items-center space-x-2 rounded-xl bg-white px-6 py-3 font-semibold text-blue-600 shadow-lg transition-all hover:scale-105 hover:bg-blue-50 hover:shadow-xl"
             >
-              <MessageSquare className="w-5 h-5" />
-              <span>Start Chatting</span>
+              <MessageSquare className="h-5 w-5" />
+              <span>Open Chat</span>
             </button>
             <button
               onClick={() => onNavigate("editor")}
-              className="px-6 py-3 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/30 transition-all border-2 border-white/30 flex items-center space-x-2"
+              className="flex items-center space-x-2 rounded-xl border-2 border-white/30 bg-white/20 px-6 py-3 font-semibold text-white transition-all hover:bg-white/30"
             >
-              <FileCode className="w-5 h-5" />
+              <FileCode className="h-5 w-5" />
               <span>Open Editor</span>
             </button>
           </motion.div>
         </div>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Stats Grid */}
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:px-12 lg:grid-cols-3">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="rounded-2xl border border-blue-100 bg-white/80 p-6 shadow-lg backdrop-blur-xl lg:col-span-2"
         >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-blue-100 hover:shadow-xl transition-all"
+          <h2 className="mb-6 text-2xl font-bold text-gray-800">Tools</h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <button
+              onClick={() => onNavigate("chat")}
+              className="group rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 text-left text-white transition-all hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} p-3 mb-4 flex items-center justify-center`}>
-                <stat.icon className="w-6 h-6 text-white" />
+              <div className="mb-3 flex items-start justify-between">
+                <MessageSquare className="h-8 w-8" />
+                <ArrowRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-800 mb-1">{stat.value}</h3>
-              <p className="text-gray-600 text-sm mb-1">{stat.label}</p>
-              <p className="text-blue-600 text-xs font-medium">{stat.change}</p>
-            </motion.div>
-          ))}
+              <h3 className="mb-1 text-xl font-semibold">Chat</h3>
+              <p className="text-sm text-white/80">Ask questions and work with the assistant.</p>
+            </button>
+
+            <button
+              onClick={() => onNavigate("editor")}
+              className="group rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-6 text-left text-white transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <FileCode className="h-8 w-8" />
+                <ArrowRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <h3 className="mb-1 text-xl font-semibold">Editor</h3>
+              <p className="text-sm text-white/80">Write code and request explanations.</p>
+            </button>
+
+            <button
+              onClick={() => onNavigate("docs")}
+              className="group rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 p-6 text-left text-white transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <BookOpen className="h-8 w-8" />
+                <ArrowRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <h3 className="mb-1 text-xl font-semibold">Docs</h3>
+              <p className="text-sm text-white/80">Browse guides for the current features.</p>
+            </button>
+
+            <button
+              onClick={() => onNavigate("projects")}
+              className="group rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-left text-white transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <Folder className="h-8 w-8" />
+                <ArrowRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <h3 className="mb-1 text-xl font-semibold">Projects</h3>
+              <p className="text-sm text-white/80">View your project list when real data is connected.</p>
+            </button>
+
+            <button
+              onClick={() => onNavigate("analytics")}
+              className="group rounded-xl bg-gradient-to-br from-orange-500 to-red-600 p-6 text-left text-white transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <BarChart3 className="h-8 w-8" />
+                <ArrowRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <h3 className="mb-1 text-xl font-semibold">Analytics</h3>
+              <p className="text-sm text-white/80">Metrics will appear here once they are backed by real data.</p>
+            </button>
+
+            <button
+              onClick={() => onNavigate("settings")}
+              className="group rounded-xl bg-gradient-to-br from-slate-500 to-slate-700 p-6 text-left text-white transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <Settings className="h-8 w-8" />
+                <ArrowRight className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+              <h3 className="mb-1 text-xl font-semibold">Settings</h3>
+              <p className="text-sm text-white/80">Adjust the local workspace preferences.</p>
+            </button>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="lg:col-span-2"
-          >
-            <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-blue-100">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center space-x-2">
-                  <Zap className="w-6 h-6 text-blue-600" />
-                  <span>Quick Actions</span>
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {quickActions.map((action, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={action.action}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`p-6 rounded-xl bg-gradient-to-br ${action.color} text-white text-left hover:shadow-xl transition-all group`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <action.icon className="w-8 h-8 mb-2" />
-                      <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-1">{action.title}</h3>
-                    <p className="text-white/80 text-sm">{action.description}</p>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Recent Activity */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="lg:col-span-1"
-          >
-            <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-blue-100 h-full">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 flex items-center space-x-2">
-                  <Activity className="w-6 h-6 text-blue-600" />
-                  <span>Recent Activity</span>
-                </h2>
-              </div>
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-start space-x-3 p-3 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
-                  >
-                    <div className={`p-2 rounded-lg ${
-                      activity.type === "chat" 
-                        ? "bg-blue-100 text-blue-600" 
-                        : "bg-indigo-100 text-indigo-600"
-                    }`}>
-                      <activity.icon className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-800">{activity.title}</p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Features Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="mt-8 bg-white/80 backdrop-blur-xl rounded-2xl p-8 shadow-lg border border-blue-100"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="rounded-2xl border border-blue-100 bg-white/80 p-6 shadow-lg backdrop-blur-xl"
         >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
-            <Star className="w-6 h-6 text-yellow-500" />
-            <span>Key Features</span>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { icon: MessageSquare, title: "AI Chat", desc: "Get instant answers to your coding questions" },
-              { icon: FileCode, title: "Code Editor", desc: "Write and debug code with AI assistance" },
-              { icon: Zap, title: "Auto Fix", desc: "Automatically fix bugs and improve code quality" },
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200"
-              >
-                <feature.icon className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.desc}</p>
-              </motion.div>
-            ))}
+          <div className="mb-6 flex items-center space-x-2">
+            <Activity className="h-6 w-6 text-blue-600" />
+            <h2 className="text-2xl font-bold text-gray-800">Activity</h2>
+          </div>
+          <div className="rounded-xl border border-dashed border-blue-200 bg-blue-50/70 p-6 text-center">
+            <p className="font-semibold text-gray-800">No activity yet.</p>
+            <p className="mt-2 text-sm text-gray-600">
+              Recent activity will appear here when the app stores real project, chat, or analytics history.
+            </p>
           </div>
         </motion.div>
       </div>
     </div>
   );
 }
-

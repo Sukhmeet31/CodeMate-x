@@ -20,6 +20,10 @@ app.get("/", (req, res) => {
 app.post("/api/explain", async (req, res) => {
   const { code } = req.body;
   try {
+    if (!code || typeof code !== "string") {
+      return res.status(400).json({ error: "Code is required." });
+    }
+
     // If user entered a normal question instead of code
     const isCode =
       code.includes("function") ||
@@ -46,26 +50,34 @@ app.post("/api/explain", async (req, res) => {
 });
 
 
-app.post("/api/fix", async (req, res) => {
-  const { code } = req.body;
-  try {
-    const result = await model.generateContent(
-      `Find bugs or improvements in this code and return the corrected version only:\n\n${code}`
-    );
-    res.json({ fixed: result.response.text() });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fix code" });
-  }
-});
-
 app.post("/api/chat", async (req, res) => {
-  const { messages } = req.body;
+  const { messages, query, code } = req.body;
   try {
-    const conversation = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n");
+    const normalizedMessages = Array.isArray(messages)
+      ? messages
+          .filter((message) => message?.content)
+          .map((message) => ({
+            role: typeof message.role === "string" ? message.role : "user",
+            content: String(message.content),
+          }))
+      : [];
+
+    if (!normalizedMessages.length) {
+      const synthesizedPrompt = [query, code].filter(Boolean).join("\n\n");
+      if (!synthesizedPrompt.trim()) {
+        return res.status(400).json({ error: "A chat message is required." });
+      }
+
+      normalizedMessages.push({ role: "user", content: synthesizedPrompt });
+    }
+
+    const conversation = normalizedMessages
+      .map((message) => `${message.role.toUpperCase()}: ${message.content}`)
+      .join("\n\n");
     const result = await model.generateContent(conversation);
     res.json({ reply: result.response.text() });
   } catch (e) {
+    console.error("Error in /api/chat:", e.message);
     res.status(500).json({ error: "Chat failed" });
   }
 });

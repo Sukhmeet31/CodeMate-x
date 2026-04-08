@@ -1,38 +1,30 @@
 import { useHotkeys } from "react-hotkeys-hook";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function CommandPalette({ open, setOpen, runCommand }) {
+export default function CommandPalette({ open, setOpen }) {
   useHotkeys("ctrl+k", () => setOpen(!open), [open]);
-
-  const commands = [
-    { name: "Explain Code", action: "explain" },
-    { name: "Fix Code", action: "fix" },
-    { name: "Optimize Code", action: "optimize" },
-    { name: "Summarize", action: "summarize" },
-  ];
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl shadow-2xl p-6 w-80"
+            className="w-80 rounded-2xl bg-white p-6 shadow-2xl"
           >
-            <h2 className="text-lg font-semibold mb-3 text-indigo-600">Command Palette</h2>
-            {commands.map((cmd) => (
-              <button
-                key={cmd.action}
-                onClick={() => { runCommand(cmd.action); setOpen(false); }}
-                className="block w-full text-left px-3 py-2 mb-2 rounded-lg hover:bg-indigo-100"
-              >
-                {cmd.name}
-              </button>
-            ))}
+            <h2 className="mb-3 text-lg font-semibold text-indigo-600">Command Palette</h2>
+            <div className="rounded-xl border border-dashed border-indigo-200 bg-indigo-50 px-4 py-6 text-center">
+              <p className="font-medium text-slate-800">No commands available yet.</p>
+              <p className="mt-2 text-sm text-slate-600">
+                Add real command handlers before exposing shortcuts here.
+              </p>
+            </div>
           </motion.div>
         </motion.div>
       )}

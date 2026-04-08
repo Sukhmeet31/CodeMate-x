@@ -5,7 +5,7 @@ import { Send, Bot, User, Loader2 } from "lucide-react";
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState([
-    { from: "ai", text: "👋 Hi! I'm CodeMate X — ask me anything about code. I can help you understand, debug, and improve your code!" },
+    { from: "ai", text: "Hi! I'm CodeMate X. Ask me anything about code and I'll help you debug, understand, and improve it." },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function ChatInterface() {
     scrollToBottom();
   }, [messages]);
 
-  const MAX_OUTPUT_LENGTH = 2000; // Limit to prevent token exhaustion
+  const MAX_OUTPUT_LENGTH = 2000;
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -32,22 +32,25 @@ export default function ChatInterface() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/explain", {
-        code: userMessage.substring(0, 5000), // Limit input
+      const res = await axios.post("http://localhost:5000/api/chat", {
+        query: userMessage.substring(0, 500),
+        messages: newMessages.map((message) => ({
+          role: message.from === "ai" ? "assistant" : "user",
+          content: message.text,
+        })),
       });
-      let responseText = res.data.explanation || "No response 🤖";
-      
-      // Limit output length to prevent token exhaustion
+      let responseText = res.data.reply || res.data.explanation || "No response.";
+
       if (responseText.length > MAX_OUTPUT_LENGTH) {
         responseText = responseText.substring(0, MAX_OUTPUT_LENGTH) + "\n\n... (Response truncated to prevent token exhaustion)";
       }
-      
+
       setMessages([
         ...newMessages,
         { from: "ai", text: responseText },
       ]);
     } catch {
-      setMessages([...newMessages, { from: "ai", text: "❌ Error getting answer. Please try again." }]);
+      setMessages([...newMessages, { from: "ai", text: "Error getting an answer. Please try again." }]);
     } finally {
       setLoading(false);
       inputRef.current?.focus();
@@ -62,7 +65,6 @@ export default function ChatInterface() {
       className="flex flex-col items-center justify-center flex-1 px-4 md:px-6 py-6 w-full"
     >
       <div className="w-full max-w-4xl h-[75vh] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-blue-200 dark:border-slate-700 rounded-3xl shadow-2xl flex flex-col overflow-hidden transition-colors duration-500">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-t-3xl">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-white/20 rounded-lg">
@@ -75,7 +77,6 @@ export default function ChatInterface() {
           </div>
         </div>
 
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-blue-50/50 to-white dark:from-slate-900/60 dark:to-slate-900">
           <AnimatePresence>
             {messages.map((msg, i) => (
@@ -89,11 +90,13 @@ export default function ChatInterface() {
                   msg.from === "user" ? "flex-row-reverse space-x-reverse" : ""
                 }`}
               >
-                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                  msg.from === "ai"
-                    ? "bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200"
-                    : "bg-indigo-600 text-white"
-                }`}>
+                <div
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    msg.from === "ai"
+                      ? "bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200"
+                      : "bg-indigo-600 text-white"
+                  }`}
+                >
                   {msg.from === "ai" ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
                 </div>
                 <motion.div
@@ -109,7 +112,7 @@ export default function ChatInterface() {
               </motion.div>
             ))}
           </AnimatePresence>
-          
+
           {loading && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -130,7 +133,6 @@ export default function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
         <div className="p-4 bg-white dark:bg-slate-900 border-t border-blue-200 dark:border-slate-700 rounded-b-3xl transition-colors">
           <div className="flex items-center gap-3">
             <input
