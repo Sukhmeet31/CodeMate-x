@@ -53,7 +53,10 @@ export async function readBounded(response, maxBytes) {
   return new TextDecoder().decode(bytes);
 }
 
-export async function importGithub(input, { fetchImpl = fetch } = {}) {
+export async function importGithub(
+  input,
+  { fetchImpl = fetch, userAgent = 'CodeMate-X-Rescue-Studio' } = {},
+) {
   const repository = parseRepository(input);
   const base = `https://api.github.com/repos/${repository}`;
   const signal = AbortSignal.timeout(45000);
@@ -61,7 +64,10 @@ export async function importGithub(input, { fetchImpl = fetch } = {}) {
     const response = await fetchImpl(base + path, {
       signal,
       redirect: 'manual',
-      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'CodeMate-X-Rescue-Studio' },
+      headers: {
+        Accept: 'application/vnd.github+json',
+        ...(userAgent ? { 'User-Agent': userAgent } : {}),
+      },
     });
     if (response.status === 404)
       throw new Error('Repository not found. Use a public repository or import a local folder.');

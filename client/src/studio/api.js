@@ -11,7 +11,7 @@ export async function request(path, body) {
     throw new Error(
       error.name === 'TimeoutError'
         ? 'This request took too long. Please retry.'
-        : 'The local API is unreachable. Start the app with npm run dev and retry.',
+        : 'The project API is unreachable. Check your connection and retry. For a local checkout, start npm run dev.',
     );
   }
   let data;
@@ -19,7 +19,7 @@ export async function request(path, body) {
     data = await response.json();
   } catch {
     throw new Error(
-      'The API returned an unexpected response. Check that the local server is running.',
+      'The project API returned an unexpected response. Please retry; for a local checkout, check that the server is running.',
     );
   }
   if (!response.ok) throw new Error(data.error || 'The request failed. Please retry.');
