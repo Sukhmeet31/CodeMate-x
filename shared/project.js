@@ -300,6 +300,11 @@ export function createProject({ name, files, source = { type: 'local' } }) {
         .trim()
         .slice(0, 80) || 'Untitled project',
     files: normalized.files,
+    baseline: {
+      kind: 'import',
+      capturedAt: now,
+      files: normalized.files.map((f) => ({ ...f })),
+    },
     source,
     excluded: normalized.excluded,
     assessment: { ...assessment, missions: undefined },
@@ -373,6 +378,26 @@ export function validateBackup(value) {
         throw new Error('Invalid date in backup.');
       return text;
     };
+    let baseline;
+    if (p.baseline === undefined) {
+      baseline = {
+        kind: 'saved',
+        capturedAt: date(p.updatedAt),
+        files: normalized.files.map((f) => ({ ...f })),
+      };
+    } else {
+      if (!p.baseline || !['import', 'saved'].includes(p.baseline.kind))
+        throw new Error('Invalid comparison baseline in backup.');
+      const originals = normalizeFiles(p.baseline.files);
+      const currentPaths = new Set(normalized.files.map((f) => f.path));
+      if (originals.excluded || originals.files.some((f) => !currentPaths.has(f.path)))
+        throw new Error('Backup contains excluded or missing baseline files.');
+      baseline = {
+        kind: p.baseline.kind,
+        capturedAt: date(p.baseline.capturedAt),
+        files: originals.files,
+      };
+    }
     const missions = p.missions.map((m) => {
       if (!['high', 'medium', 'low'].includes(m.priority))
         throw new Error('Invalid mission priority in backup.');
@@ -441,6 +466,7 @@ export function validateBackup(value) {
       id: p.id,
       name: p.name,
       files: normalized.files,
+      baseline,
       source,
       excluded: Number.isInteger(p.excluded) && p.excluded >= 0 ? p.excluded : 0,
       assessment,

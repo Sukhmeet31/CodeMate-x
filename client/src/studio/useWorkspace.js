@@ -27,8 +27,7 @@ export function useWorkspace() {
           try {
             const value = await storage.current.load();
             if (active) {
-              if (value) validateBackup(value);
-              setData({ workspace: value || empty, revision: 0 });
+              setData({ workspace: value ? validateBackup(value) : empty, revision: 0 });
               setReady(true);
               setSaveState('saved');
               setReadOnly(false);
@@ -51,8 +50,7 @@ export function useWorkspace() {
       .load()
       .then((value) => {
         if (!active) return;
-        if (value) validateBackup(value);
-        setData({ workspace: value || empty, revision: 0 });
+        setData({ workspace: value ? validateBackup(value) : empty, revision: 0 });
         setReady(true);
         setSaveState('saved');
       })

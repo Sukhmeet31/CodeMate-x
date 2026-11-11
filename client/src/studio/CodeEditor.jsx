@@ -1,5 +1,6 @@
-import Editor, { loader } from '@monaco-editor/react';
+import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 import { useRef } from 'react';
+import { comparisonOptions } from './comparisonOptions.js';
 import * as monaco from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
@@ -32,10 +33,9 @@ monaco.editor.defineTheme('rescue-dark', {
   },
 });
 
-export default function CodeEditor({ file, projectId, onChange, readOnly, fontSize }) {
-  const editorRef = useRef(null);
-  const extension = file.path.split('.').pop();
-  const language =
+function fileLanguage(path) {
+  const extension = path.split('.').pop();
+  return (
     {
       js: 'javascript',
       jsx: 'javascript',
@@ -56,7 +56,42 @@ export default function CodeEditor({ file, projectId, onChange, readOnly, fontSi
       go: 'go',
       java: 'java',
       svg: 'xml',
-    }[extension] || 'plaintext';
+    }[extension] || 'plaintext'
+  );
+}
+
+export function CodeComparison({ change, projectId, fontSize }) {
+  return (
+    <DiffEditor
+      height="100%"
+      theme="rescue-dark"
+      language={fileLanguage(change.path)}
+      original={change.original}
+      modified={change.current}
+      originalModelPath={`baseline/${projectId}/${change.path}`}
+      modifiedModelPath={`review/${projectId}/${change.path}`}
+      loading={<div className="editor-loading">Opening comparison…</div>}
+      options={{
+        ...comparisonOptions,
+        originalAriaLabel: 'Comparison starting point (read only)',
+        modifiedAriaLabel: 'Current file (read only)',
+        renderSideBySide: false,
+        renderOverviewRuler: false,
+        automaticLayout: true,
+        fontSize,
+        wordWrap: 'on',
+        minimap: { enabled: false },
+        scrollBeyondLastLine: false,
+        padding: { top: 16, bottom: 16 },
+        hideUnchangedRegions: { enabled: true, contextLineCount: 3 },
+      }}
+    />
+  );
+}
+
+export default function CodeEditor({ file, projectId, onChange, readOnly, fontSize }) {
+  const editorRef = useRef(null);
+  const language = fileLanguage(file.path);
   return (
     <Editor
       height="100%"

@@ -13,10 +13,12 @@ import {
   ShieldCheck,
   Terminal,
   X,
+  GitCompareArrows,
 } from 'lucide-react';
 import { Empty, Dialog, Tag } from './ui';
 import { request, download } from './api';
 import { normalizeFiles, byteLength, LIMITS } from '../../../shared/project.js';
+import { getChanges } from '../../../shared/changes.js';
 const CodeEditor = lazy(() => import('./CodeEditor'));
 
 function Assistant({ file, mission, health, onSettings, readOnly }) {
@@ -169,6 +171,7 @@ export default function Workspace({
   onImport,
   health,
   onSettings,
+  onChanges,
   readOnly,
   fontSize,
 }) {
@@ -200,6 +203,7 @@ export default function Workspace({
     project.files[0];
   const files = project.files.filter((f) => f.path.toLowerCase().includes(query.toLowerCase()));
   const mission = project.missions.find((m) => m.id === missionId);
+  const changes = new Map(getChanges(project).map((f) => [f.path, f.status]));
   function edit(content) {
     if (content === file.content) return true;
     if (byteLength(content) > LIMITS.fileBytes) {
@@ -256,6 +260,9 @@ export default function Workspace({
         </div>
         <div className="workspace-tools">
           <Tag>LOCAL COPY</Tag>
+          <button className="button secondary compact" onClick={onChanges}>
+            <GitCompareArrows size={15} /> Review changes{changes.size ? ` (${changes.size})` : ''}
+          </button>
           <button
             className="button secondary compact"
             onClick={() => setShowCommands(!showCommands)}
@@ -353,6 +360,14 @@ export default function Workspace({
               >
                 <FileCode2 size={14} />
                 <span>{f.path}</span>
+                {changes.has(f.path) && (
+                  <small
+                    className={`change-marker ${changes.get(f.path)}`}
+                    aria-label={changes.get(f.path)}
+                  >
+                    {changes.get(f.path) === 'added' ? 'A' : 'M'}
+                  </small>
+                )}
               </button>
             ))}
             {!files.length && <p className="field-help">No matching files.</p>}

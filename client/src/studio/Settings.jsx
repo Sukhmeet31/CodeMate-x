@@ -35,8 +35,8 @@ export default function Settings({
     if (!file) return;
     setError('');
     try {
-      if (file.size > 70 * 1024 * 1024)
-        throw new Error('Backup is too large. Choose a CodeMate-X workspace backup under 70 MiB.');
+      if (file.size > 768 * 1024 * 1024)
+        throw new Error('Backup is too large. Choose a CodeMate-X workspace backup under 768 MiB.');
       setIncoming(validateBackup(JSON.parse(await file.text())));
     } catch (e) {
       setError(`Could not restore: ${e.message}`);
@@ -62,7 +62,8 @@ export default function Settings({
           <h2>Your workspace, backed up.</h2>
           <p>
             Projects and notes are stored in this browser’s IndexedDB. Clearing browser data removes
-            them. Keep a backup to move to another browser or device.
+            them. Backups include original snapshots, edits and mission notes. Keep a backup to move
+            to another browser or device.
           </p>
           <div className="settings-stat">
             <strong>{workspace.projects.length}</strong>
@@ -201,7 +202,7 @@ export default function Settings({
             <span>const</span> nextChapter = <em>'keep building';</em>
           </div>
           <p className="field-help">
-            v0.1 · Source assessment does not execute build or test commands.
+            v0.2 · Source assessment does not execute build or test commands.
           </p>
         </section>
       </div>

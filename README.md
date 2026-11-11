@@ -19,13 +19,15 @@ npm run dev
 
 Open http://127.0.0.1:5173. The local Express API runs at http://127.0.0.1:5000; Vite proxies `/api` requests to it. Keep these ports available. Stop both processes with Ctrl+C.
 
-## What works in v0.1
+## What works in v0.2
 
 - Public GitHub repository import (default branch, pinned to the fetched commit) and local folder import.
 - An explicitly labeled sample habit tracker to explore the workflow.
 - Static source assessment: manifests/scripts, README, test files, CI, environment documentation, TODO/FIXME comments, and explicit placeholder screens, with file evidence.
 - Prioritized rescue missions with notes, in-progress/completed states, and rescanning that retains matching progress.
 - Monaco editor with bundled workers, file filtering, new files, and individual-file download.
+- Changes & export screen with modified/added file markers, inline original-versus-current comparison, confirmed file restoration and session undo.
+- Source ZIP export preserving current source paths and bytes, plus a separate Markdown rescue report with mission notes, provenance, evidence and current package scripts.
 - Up to 20 projects saved to browser IndexedDB, saved-state feedback, one writable browser tab, activity history, workspace JSON backup/restore, and removal of browser copies.
 - Optional Gemini assistance for the selected file and mission, with explicit send and actionable errors.
 - Responsive dark interface, keyboard-accessible native dialogs, and reduced-motion support.
@@ -42,7 +44,9 @@ The server uses Google's REST generateContent endpoint; see the [official Gemini
 
 The studio runs locally with a loopback Express server or as a hosted Cloudflare Worker. Hosted visitors have separate browser workspaces; there is no shared project database. Firebase-based legacy screens remain in `client/src/components` for reference but are not loaded by the new studio. Cloud accounts, sync, and private GitHub authentication are future work.
 
-Imported files are copies. Editing them never modifies your original folder or GitHub repository. Download a file to use its changes in your own checkout, or export a workspace backup to preserve the whole studio state. A workspace backup is JSON, not a runnable project archive.
+Imported files are copies. Editing them never modifies your original folder or GitHub repository. Use **Changes & export** to review changes, restore a file, and download the current supported source as a ZIP. The ZIP excludes assets, lockfiles, dependencies and Git history that were not imported; it is not necessarily a complete runnable repository. The separate Markdown rescue report carries mission notes and context. Workspace settings exports a restorable JSON backup with original snapshots, edits and notes.
+
+New imports retain an independent original snapshot. Projects saved before v0.2 compare against their existing saved content, labelled **Saved starting point**; earlier originals cannot be recovered. Restoring an added file removes it from the workspace. Undo is available for the latest restore while the Changes screen stays open. Restore and undo enforce the same size limits as editing, so an over-limit restoration is rejected without changing files.
 
 Projects are stored in the browser for the specific origin (host + port). Clearing browser data removes them; another browser, host, or port has a separate workspace. Export backups regularly. Other tabs are read-only while one tab owns the workspace lock. Close the writable tab to transfer ownership. Browsers without the Web Locks API should use only one tab.
 
@@ -67,6 +71,8 @@ The tests use Node's test runner, real HTTP requests to an ephemeral Express ser
 ## Code map
 
 - `shared/project.js`: source boundaries, deterministic assessment, mission progress, backup validation.
+- `shared/changes.js`: comparisons, bounded restoration, and file updates.
+- `shared/export.js`: source ZIP and Markdown rescue report generation.
 - `server/github.js`: public GitHub importer with time and size bounds.
 - `server/app.js`: health, import, and optional assistant API.
 - `server/worker.js`: hosted API and static asset routing.
