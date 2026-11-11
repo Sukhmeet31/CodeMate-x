@@ -18,6 +18,8 @@ test('IndexedDB persists the most recent edit and mission note across repository
   const restored = await createStorage(db).load();
   assert.equal(restored.projects[0].files[0].content, 'second');
   assert.equal(restored.projects[0].missions[0].note, 'Make it durable');
+  assert.equal(restored.projects[0].baseline.files[0].content, 'first');
+  assert.equal(validateBackup(restored).projects[0].baseline.files[0].content, 'first');
 });
 test('failed database open is reported rather than treated as empty saved data', async () => {
   const storage = createStorage({
