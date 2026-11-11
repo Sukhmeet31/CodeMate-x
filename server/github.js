@@ -60,7 +60,7 @@ export async function importGithub(input, { fetchImpl = fetch } = {}) {
   async function api(path) {
     const response = await fetchImpl(base + path, {
       signal,
-      redirect: 'error',
+      redirect: 'manual',
       headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'CodeMate-X-Rescue-Studio' },
     });
     if (response.status === 404)
@@ -104,7 +104,7 @@ export async function importGithub(input, { fetchImpl = fetch } = {}) {
         const path = entry.path.split('/').map(encodeURIComponent).join('/');
         const response = await fetchImpl(
           `https://raw.githubusercontent.com/${repository}/${commit.sha}/${path}`,
-          { signal, redirect: 'error' },
+          { signal, redirect: 'manual' },
         );
         if (!response.ok)
           throw new Error(

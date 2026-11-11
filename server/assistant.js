@@ -49,7 +49,7 @@ export async function answerQuestion(
     {
       method: 'POST',
       signal: AbortSignal.timeout(45000),
-      redirect: 'error',
+      redirect: 'manual',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify({
         systemInstruction: {
