@@ -31,7 +31,7 @@ const literal = (value) =>
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
-    .replace(/([\\`*_{}\[\]()#+.!|\-])/g, '\\$1')
+    .replace(/([\\`*_{}\[\]()#+.!|~\-])/g, '\\$1')
     .replace(/[\r\n]+/g, ' ');
 const codeBlock = (value) =>
   String(value)

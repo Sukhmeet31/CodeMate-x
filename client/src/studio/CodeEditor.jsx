@@ -1,5 +1,6 @@
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 import { useRef } from 'react';
+import { comparisonOptions } from './comparisonOptions.js';
 import * as monaco from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
@@ -71,8 +72,9 @@ export function CodeComparison({ change, projectId, fontSize }) {
       modifiedModelPath={`review/${projectId}/${change.path}`}
       loading={<div className="editor-loading">Opening comparison…</div>}
       options={{
-        readOnly: true,
-        originalEditable: false,
+        ...comparisonOptions,
+        originalAriaLabel: 'Comparison starting point (read only)',
+        modifiedAriaLabel: 'Current file (read only)',
         renderSideBySide: false,
         renderOverviewRuler: false,
         automaticLayout: true,

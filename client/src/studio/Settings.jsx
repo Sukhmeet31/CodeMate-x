@@ -202,7 +202,7 @@ export default function Settings({
             <span>const</span> nextChapter = <em>'keep building';</em>
           </div>
           <p className="field-help">
-            v0.1 · Source assessment does not execute build or test commands.
+            v0.2 · Source assessment does not execute build or test commands.
           </p>
         </section>
       </div>

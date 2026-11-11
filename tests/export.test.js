@@ -100,3 +100,13 @@ test('legacy projects export without edits and report a saved starting point', (
   assert.match(rescueReport(p), /Saved starting point/);
   assert.match(rescueReport(p), /No source changes/);
 });
+
+test('report titles and source evidence preserve literal strikethrough-like text', () => {
+  const p = createProject({
+    name: '~~Keep this~~',
+    files: [{ path: 'app.js', content: '// TODO: ~~keep this call~~' }],
+  });
+  const report = rescueReport(p);
+  assert.ok(report.includes('\\~\\~Keep this\\~\\~'));
+  assert.ok(report.includes('\\~\\~keep this call\\~\\~'));
+});

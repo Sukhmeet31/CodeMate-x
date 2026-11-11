@@ -147,6 +147,12 @@ small {
   padding: 30px 18px 15px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+}
+@media (max-height: 800px) {
+  .sidebar-tip {
+    display: none;
+  }
 }
 .brand {
   display: flex;
