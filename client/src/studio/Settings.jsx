@@ -62,7 +62,8 @@ export default function Settings({
           <h2>Your workspace, backed up.</h2>
           <p>
             Projects and notes are stored in this browser’s IndexedDB. Clearing browser data removes
-            them. Backups include original snapshots, edits and mission notes. Keep a backup to move to another browser or device.
+            them. Backups include original snapshots, edits and mission notes. Keep a backup to move
+            to another browser or device.
           </p>
           <div className="settings-stat">
             <strong>{workspace.projects.length}</strong>

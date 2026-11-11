@@ -17,22 +17,26 @@ import {
   AlertCircle,
   FolderGit2,
   Sparkles,
+  GitCompareArrows,
 } from 'lucide-react';
 import { useWorkspace } from './useWorkspace';
 import Overview from './Overview';
 import Plan from './Plan';
 import Workspace from './Workspace';
+import Changes from './Changes';
 import Settings from './Settings';
 import ImportDialog from './ImportDialog';
 import { Empty } from './ui';
 import { sampleProject } from './sample';
 import { request, timeLabel } from './api';
 import { rescanProject } from '../../../shared/project.js';
+import { getChanges } from '../../../shared/changes.js';
 
 const navigation = [
   ['overview', 'Overview', LayoutDashboard],
   ['plan', 'Rescue plan', Flag],
   ['workspace', 'Workspace', Code2],
+  ['changes', 'Changes & export', GitCompareArrows],
   ['activity', 'Activity', Activity],
 ];
 
@@ -52,6 +56,7 @@ export default function RescueStudio() {
     workspace.projects[0];
   const fontSize = workspace.settings?.fontSize || 14;
   const openMissions = project?.missions.filter((m) => m.status !== 'done').length || 0;
+  const changedCount = project ? getChanges(project).length : 0;
   async function refreshHealth() {
     setHealth(null);
     try {
@@ -167,6 +172,7 @@ export default function RescueStudio() {
               <Icon size={18} />
               <span>{label}</span>
               {id === 'plan' && openMissions > 0 && <small>{openMissions}</small>}
+              {id === 'changes' && changedCount > 0 && <small>{changedCount}</small>}
             </button>
           ))}
         </nav>
@@ -217,7 +223,7 @@ export default function RescueStudio() {
             <SettingsIcon size={18} /> Workspace settings
           </button>
           <div className="sidebar-footer">
-            <span className="live-dot" /> LOCAL WORKSPACE <span>v0.1</span>
+            <span className="live-dot" /> LOCAL WORKSPACE <span>v0.2</span>
           </div>
         </div>
       </aside>
@@ -351,6 +357,18 @@ export default function RescueStudio() {
                   onImport={() => setImporting(true)}
                   health={health}
                   onSettings={() => navigate('settings')}
+                  onChanges={() => navigate('changes')}
+                  readOnly={readOnly}
+                  fontSize={fontSize}
+                />
+              )}
+              {view === 'changes' && (
+                <Changes
+                  key={project?.id}
+                  project={project}
+                  onChange={changeProject}
+                  onWorkspace={openWorkspace}
+                  onImport={() => setImporting(true)}
                   readOnly={readOnly}
                   fontSize={fontSize}
                 />
