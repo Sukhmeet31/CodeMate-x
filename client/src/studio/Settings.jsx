@@ -169,8 +169,9 @@ export default function Settings({
           <h2>Know where your code goes.</h2>
           <p>
             Local folder imports stay in your browser. Public repositories are read through the
-            application server. The assistant sends your question, selected mission, and up to
-            20,000 characters of the selected file to Google Gemini only when you press Send.
+            application server, with a direct browser fallback if GitHub rate-limits the shared
+            service. The assistant sends your question, selected mission, and up to 20,000
+            characters of the selected file to Google Gemini only when you press Send.
           </p>
           <p>
             Known secret files and private-key content are excluded on import. Credentials embedded

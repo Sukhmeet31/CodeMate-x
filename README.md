@@ -6,7 +6,7 @@ Give unfinished projects a fresh start. Import source code, find evidence-based 
 
 [Open Project Rescue Studio](https://codemate-x-rescue-studio.tigersheroff6.chatgpt.site)
 
-The public site keeps each visitor's projects in their own browser. The hosted API supports public GitHub imports. AI is optional and requires the site owner to configure a Gemini key; no key is included in this release.
+The public site keeps each visitor's projects in their own browser. Public GitHub imports use the hosted API, with a direct browser fallback if the shared server reaches GitHub's rate limit. AI is optional and requires the site owner to configure a Gemini key; no key is included in this release.
 
 ## Run locally
 

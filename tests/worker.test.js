@@ -10,6 +10,31 @@ const request = (path, body, headers = {}) =>
     body: JSON.stringify(body),
   });
 
+test('hosted upstream redirects are rejected without forwarding requests or credentials', async () => {
+  const calls = [];
+  const worker = createWorker({
+    fetchImpl: async (url, options) => {
+      assert.equal(options.redirect, 'manual');
+      calls.push(url);
+      return new Response(null, { status: 302, headers: { Location: 'https://other.example' } });
+    },
+  });
+  const imported = await worker.fetch(
+    request('/api/import/github', { repository: 'owner/demo' }),
+    {},
+  );
+  assert.equal(imported.status, 502);
+  const chat = await worker.fetch(request('/api/chat', { message: 'Help' }), {
+    GEMINI_API_KEY: 'test-only',
+  });
+  assert.equal(chat.status, 502);
+  assert.equal(calls.length, 2);
+  assert.equal(
+    calls.some((url) => url.includes('other.example')),
+    false,
+  );
+});
+
 test('hosted API serves health and keeps AI optional without a runtime secret', async () => {
   const worker = createWorker();
   const health = await worker.fetch(new Request(origin + '/api/health'), {});
@@ -27,7 +52,8 @@ test('hosted API serves health and keeps AI optional without a runtime secret', 
 test('hosted imports use the same bounded importer and accept only their own browser origin', async () => {
   const calls = [];
   const worker = createWorker({
-    fetchImpl: async (url) => {
+    fetchImpl: async (url, options) => {
+      assert.equal(options.redirect, 'manual', 'edge fetch requires explicit redirect rejection');
       calls.push(url);
       if (url.includes('raw.githubusercontent.com')) return new Response('# Demo');
       if (url.endsWith('/commits/main')) return Response.json({ sha: 'abc123' });

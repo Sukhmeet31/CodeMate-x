@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Github, FolderUp, ArrowRight, LockKeyhole, LoaderCircle } from 'lucide-react';
 import { Dialog } from './ui';
-import { request } from './api';
+import { importPublicProject } from './importProject';
 import { createProject, isSourcePath, LIMITS } from '../../../shared/project.js';
 
 export default function ImportDialog({ onClose, onImport }) {
@@ -14,7 +14,7 @@ export default function ImportDialog({ onClose, onImport }) {
     setError('');
     setBusy(true);
     try {
-      const { project } = await request('/api/import/github', { repository });
+      const project = await importPublicProject(repository);
       onImport(project);
       onClose();
     } catch (e) {
@@ -104,7 +104,8 @@ export default function ImportDialog({ onClose, onImport }) {
             autoFocus
           />
           <p className="field-help">
-            We’ll read the default branch. Your repository stays untouched.
+            We’ll read the default branch. Your repository stays untouched. If the shared service is
+            rate-limited, your browser reads public GitHub directly.
           </p>
           <button className="button primary full" disabled={busy || !repository.trim()}>
             {busy ? (
